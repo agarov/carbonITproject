@@ -4,7 +4,7 @@ public class Cell {
     private boolean mountainous;
     private int nbrOfTreasures;
     private boolean occupied;
-
+    private Adventurer attachedAdventurer;
 
 
     public Cell(){
@@ -38,12 +38,25 @@ public class Cell {
         this.occupied = occupied;
     }
 
+    public void attachAdventurer(Adventurer adventurer){
+        this.attachedAdventurer=adventurer;
+        this.occupied=true;
+    }
+
+    public void detachAdventurer(Adventurer adventurer){
+        this.attachedAdventurer=null;
+        this.occupied=false;
+    }
+
     public String displayCell(int length) {
         if(isMountainous()){
             return "M"+String.join("", Collections.nCopies(length+3, " "));
         }
         else if (nbrOfTreasures>0){
             return "T("+nbrOfTreasures+")"+String.join("", Collections.nCopies(length, " "));
+        }
+        else if(isOccupied()){
+            return "A("+attachedAdventurer.getName()+") ";
         }
         else return "."+String.join("", Collections.nCopies(length+3, " "));
     }

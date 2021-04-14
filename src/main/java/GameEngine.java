@@ -83,7 +83,7 @@ public class GameEngine {
                         Adventurer.Orientation orientation = Adventurer.Orientation.valueOf(separated[4]);
                         Adventurer adventurer = new Adventurer(adventurerName,x,y,orientation,separated[5]);
                         this.adventurers.add(adventurer);
-                        map[y][x].setOccupied(true);
+                        map[y][x].attachAdventurer(adventurer);
                         break;
                     default:
                         System.out.println("Unexpected value: " + startingLetter);
@@ -102,23 +102,10 @@ public class GameEngine {
     public void visualizeMap(){
         for(int y=0; y<verticalLength; y++) {
             for (int x = 0; x < horizontalLength; x++) {
-                if(map[y][x].isOccupied()){
-                    System.out.print(findAdventurer(x,y).displayAdventurer());
-                }
-                else {
-                    System.out.print(map[y][x].displayCell(this.longerNameLength));
-                }
+                System.out.print(map[y][x].displayCell(this.longerNameLength));
             }
             System.out.print("\n");
         }
     }
 
-    public Adventurer findAdventurer(int x,int y){
-        for(Adventurer adventurer : adventurers){
-            if((adventurer.getX()==x)&&(adventurer.getY()==y)){
-                return adventurer;
-            }
-        }
-        return null;
-    }
 }

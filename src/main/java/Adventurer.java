@@ -16,6 +16,11 @@ public class Adventurer {
     private int x;
     private int y;
     private Orientation currentOrientation;
+
+    public String getName() {
+        return name;
+    }
+
     private String initialPath;
     private String remainingPath;
     private int lootedTreasures;
@@ -46,8 +51,5 @@ public class Adventurer {
         this.y = y;
     }
 
-    public String displayAdventurer(){
-        return "A("+name+") ";
-    }
 
 }
