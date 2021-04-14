@@ -41,22 +41,26 @@ public class Cell {
     public void attachAdventurer(Adventurer adventurer){
         this.attachedAdventurer=adventurer;
         this.occupied=true;
+        if(nbrOfTreasures>0){
+            nbrOfTreasures--;
+            this.attachedAdventurer.addTreasure();
+        }
     }
 
-    public void detachAdventurer(Adventurer adventurer){
+    public void detachAdventurer(){
         this.attachedAdventurer=null;
         this.occupied=false;
     }
 
     public String displayCell(int length) {
-        if(isMountainous()){
+       if(isOccupied()){
+            return "A("+attachedAdventurer.getName()+") ";
+        }
+        else if(isMountainous()){
             return "M"+String.join("", Collections.nCopies(length+3, " "));
         }
         else if (nbrOfTreasures>0){
             return "T("+nbrOfTreasures+")"+String.join("", Collections.nCopies(length, " "));
-        }
-        else if(isOccupied()){
-            return "A("+attachedAdventurer.getName()+") ";
         }
         else return "."+String.join("", Collections.nCopies(length+3, " "));
     }

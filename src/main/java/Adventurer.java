@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.LinkedList;
+
 public class Adventurer {
 
     public enum Orientation {
@@ -31,24 +34,47 @@ public class Adventurer {
         this.y=y;
         this.currentOrientation=orientation;
         this.initialPath = initialPath;
-        this.remainingPath=initialPath;
+        this.remainingPath= initialPath;
         this.lootedTreasures=0;
     }
 
+
     public int getX() {
         return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
     }
 
     public int getY() {
         return y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void addTreasure(){
+        this.lootedTreasures++;
+    }
+
+    public Orientation getCurrentOrientation() {
+        return currentOrientation;
+    }
+
+    public String retrieveAction(){
+        String actionLetter = remainingPath.substring(0,1);
+        remainingPath = remainingPath.substring(1);
+        return actionLetter;
+    }
+
+    public void turnRight(){
+        currentOrientation = currentOrientation.turnTo(Turn.D);
+    }
+
+    public void turnLeft(){
+        currentOrientation = currentOrientation.turnTo(Turn.G);
     }
 
 
