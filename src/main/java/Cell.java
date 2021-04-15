@@ -43,7 +43,8 @@ public class Cell {
         this.occupied=true;
         if(nbrOfTreasures>0){
             nbrOfTreasures--;
-            this.attachedAdventurer.addTreasure();
+            attachedAdventurer.addTreasure();
+            System.out.println(attachedAdventurer.getName()+" found a treasure !");
         }
     }
 

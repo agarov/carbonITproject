@@ -126,11 +126,11 @@ public class GameEngine {
             switch (adventurer.retrieveAction()){
                 case "G":
                     adventurer.turnLeft();
-                    System.out.println("Adventurer turned to the left, facing now "+adventurer.getCurrentOrientation().toString());
+                    System.out.println(adventurer.getName()+" turned to the left, facing now "+adventurer.getCurrentOrientation().toString());
                     break;
                 case "D":
                     adventurer.turnRight();
-                    System.out.println("Adventurer turned to the right, facing now "+adventurer.getCurrentOrientation().toString());
+                    System.out.println(adventurer.getName()+" turned to the right, facing now "+adventurer.getCurrentOrientation().toString());
                     break;
                 case "A":
                     int previousx = adventurer.getX();
@@ -152,10 +152,12 @@ public class GameEngine {
                             break;
                     }
                     if(attainableCase(newx,newy)){
+                        System.out.println(adventurer.getName()+" moved from "+previousx+";"+previousy+" to "+newx+";"+newy);
                         map[previousy][previousx].detachAdventurer();
                         map[newy][newx].attachAdventurer(adventurer);
                         adventurer.setX(newx);
                         adventurer.setY(newy);
+                        visualizeMap();
                     }
                     else{
                         System.out.println("Unattainable case");
@@ -164,7 +166,7 @@ public class GameEngine {
                 default:
                     System.out.println("Unexpected action character");
             }
-            visualizeMap();
+
         }
     }
 

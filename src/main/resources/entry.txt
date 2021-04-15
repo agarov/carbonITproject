@@ -1,7 +1,6 @@
-#salut
 C - 3 - 4
-M - 0 - 2
+M - 1 - 0
+M - 2 - 1
 T - 0 - 3 - 2
-  #comment ça va ?
 T - 1 - 3 - 3
-A - Indiana - 1 - 1 - S - AADADA
+A - Lara - 1 - 1 - S - AADADAGGA
