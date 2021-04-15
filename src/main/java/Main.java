@@ -4,6 +4,7 @@ public class Main {
         GameEngine gameEngine = new GameEngine();
         gameEngine.parseData(gameEngine.extractData("entry.txt"));
         gameEngine.run();
+        gameEngine.generateOutput();
     }
 }
 

@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -22,17 +20,17 @@ public class GameEngine {
 
     public LinkedList<String> extractData(String fileName){
         try {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(fileName).getFile());
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        LinkedList<String> lines = new LinkedList<>();
-        String line = br.readLine();
-        while(line!=null){
-            lines.add(line);
-            line = br.readLine();
-        }
-        br.close();
-        return lines;
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource(fileName).getFile());
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            LinkedList<String> lines = new LinkedList<>();
+            String line = br.readLine();
+            while(line!=null){
+               lines.add(line);
+               line = br.readLine();
+            }
+            br.close();
+            return lines;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -172,6 +170,41 @@ public class GameEngine {
 
     public boolean attainableCase(int x,int y){
         return (x>=0)&&(y>=0)&&(y<verticalLength)&&(x<horizontalLength)&&(!map[y][x].isOccupied())&&(!map[y][x].isMountainous());
+    }
+
+    public void generateOutput(){
+        try {
+            File fout = new File("out.txt");
+            FileOutputStream fos = new FileOutputStream(fout);
+
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+            bw.write("C - "+horizontalLength+" - "+verticalLength);
+            bw.newLine();
+            for(int y=0; y<verticalLength; y++) {
+                for (int x = 0; x < horizontalLength; x++) {
+                    if(map[y][x].isMountainous()){
+                        bw.write("M - "+x+" - "+y);
+                        bw.newLine();
+                    }
+                }
+            }
+            for(int y=0; y<verticalLength; y++) {
+                for (int x = 0; x < horizontalLength; x++) {
+                    if(map[y][x].getNbrOfTreasures()>0){
+                        bw.write("T - "+x+" - "+y+" - "+map[y][x].getNbrOfTreasures());
+                        bw.newLine();
+                    }
+                }
+            }
+            for(Adventurer adventurer : adventurers){
+                bw.write("A - "+adventurer.getName()+" - "+adventurer.getX()+" - "+adventurer.getY()+" - "+adventurer.getCurrentOrientation()+" - "+adventurer.getLootedTreasures());
+                bw.newLine();
+            }
+            bw.close();
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+
     }
 
 

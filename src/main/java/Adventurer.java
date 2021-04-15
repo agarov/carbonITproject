@@ -69,6 +69,10 @@ public class Adventurer {
         return actionLetter;
     }
 
+    public int getLootedTreasures() {
+        return lootedTreasures;
+    }
+
     public void turnRight(){
         currentOrientation = currentOrientation.turnTo(Turn.D);
     }
