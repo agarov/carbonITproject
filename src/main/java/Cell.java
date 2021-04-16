@@ -13,6 +13,9 @@ public class Cell {
         this.occupied=false;
     }
 
+    public Adventurer getAttachedAdventurer() {
+        return attachedAdventurer;
+    }
 
     public boolean isMountainous() {
         return mountainous;
@@ -32,10 +35,6 @@ public class Cell {
 
     public boolean isOccupied() {
         return occupied;
-    }
-
-    public void setOccupied(boolean occupied) {
-        this.occupied = occupied;
     }
 
     public void attachAdventurer(Adventurer adventurer){
