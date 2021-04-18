@@ -25,7 +25,7 @@ public class CellTest {
         testCell.setNbrOfTreasures(2);
         testCell.attachAdventurer(adventurer);
         assertEquals(adventurer,testCell.getAttachedAdventurer());
-        assertEquals(true,testCell.isOccupied());
+        assertTrue(testCell.isOccupied());
         assertEquals(1, testCell.getNbrOfTreasures());
         assertEquals(1,adventurer.getLootedTreasures());
     }
@@ -35,8 +35,8 @@ public class CellTest {
         Adventurer adventurer = new Adventurer("Test",0,0, Adventurer.Orientation.S,"AADA");
         testCell.attachAdventurer(adventurer);
         testCell.detachAdventurer();
-        assertEquals(null,testCell.getAttachedAdventurer());
-        assertEquals(false,testCell.isOccupied());
+        assertNull(testCell.getAttachedAdventurer());
+        assertFalse(testCell.isOccupied());
     }
 
     @Test

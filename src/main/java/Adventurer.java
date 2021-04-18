@@ -61,6 +61,7 @@ public class Adventurer {
         return currentOrientation;
     }
 
+    //Retrieve the next character of the path to determine action to compute
     public String retrieveAction(){
         if(remainingPath.length()>0){
             String actionLetter = remainingPath.substring(0,1);

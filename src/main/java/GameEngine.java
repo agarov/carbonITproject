@@ -7,6 +7,7 @@ public class GameEngine {
     private Cell[][] map;
     private int horizontalLength;
     private int verticalLength;
+    //Used for displaying
     private int longerNameLength;
     private int nbrOfTurn;
     private ArrayList<Adventurer> adventurers;
@@ -42,7 +43,7 @@ public class GameEngine {
         return adventurers;
     }
 
-
+    // Get input from the txt file and transform it to an ArrayList of String corresponding to the lines of the file
     public LinkedList<String> extractData(String fileName){
         try {
             File file = new File(fileName);
@@ -61,24 +62,29 @@ public class GameEngine {
             return null;
         }
     }
-
+    //Initialize the map depending on the lines retrieved during the data extraction
     public void parseData(LinkedList<String> lines){
+        //Remove all the comments
         String firstLine = lines.removeFirst().trim();
         while(firstLine.substring(0,1).equals("#")){
             firstLine = lines.removeFirst().trim();
         }
+        //Check this first uncommented line
         firstLine = firstLine.replaceAll("\\s+","");
         String[] separated = firstLine.split("-");
+        //If this first uncommented line start with a C, initialize the map with the right lengths
         if (separated[0].equals("C")){
             this.horizontalLength = Integer.parseInt(separated[1]);
             this.verticalLength = Integer.parseInt(separated[2]);
             this.map = new Cell[verticalLength][horizontalLength];
             this.populateMap();
         }
+        //Otherwise, impossible to continue
         else{
             System.out.println("Wrong entry file");
             return;
         }
+        //Then, for each remaining uncommented lines create the corresponding item on the map
         for(String line : lines){
             line = line.trim();
             String startingLetter = line.substring(0,1);
@@ -102,27 +108,38 @@ public class GameEngine {
             }
         }
     }
-
+    //Set corresponding cell to mountainous
     public void createMountainFromStrings(String[] separated){
         int x = Integer.parseInt(separated[1]);
         int y = Integer.parseInt(separated[2]);
         map[y][x].setMountainous(true);
     }
-
+    //Add treasure(s) to the corresponding cell
     public void createTreasuresFromStrings(String[] separated){
         int x = Integer.parseInt(separated[1]);
         int y = Integer.parseInt(separated[2]);
         int nbrOfTreasures = Integer.parseInt(separated[3]);
-        map[y][x].setNbrOfTreasures(nbrOfTreasures);
+        if(!map[y][x].isMountainous()){
+            map[y][x].setNbrOfTreasures(nbrOfTreasures);
+        }
+        else{
+            System.out.println("Impossible to add treasures onto mountainous cell");
+        }
     }
-
+    //Create adventurer corresponding to the strings, if the cell is not already occupied
     public void createAdventurerFromStrings(String[] separated){
-        String adventurerName = separated[1];
-        if(adventurerName.length()>longerNameLength){longerNameLength=adventurerName.length();}
         int x = Integer.parseInt(separated[2]);
         int y = Integer.parseInt(separated[3]);
+        if(map[y][x].isOccupied()){
+            System.out.println("Cell already occupied");
+            return;
+        }
+        String adventurerName = separated[1];
+        //Used to determine the longer name, useful for displaying
+        if(adventurerName.length()>longerNameLength){longerNameLength=adventurerName.length();}
         Adventurer.Orientation orientation = Adventurer.Orientation.valueOf(separated[4]);
         String path = separated[5];
+        //Used to determine the number of turns to compute
         if(path.length()>nbrOfTurn){nbrOfTurn=path.length();}
         Adventurer adventurer = new Adventurer(adventurerName,x,y,orientation,path);
         addAdventurer(adventurer);
@@ -133,6 +150,7 @@ public class GameEngine {
         adventurers.add(adventurer);
     }
 
+    //Initialize the map with the cells
     public void populateMap(){
         for(int y=0; y<verticalLength; y++)
             for(int x=0; x<horizontalLength; x++)
@@ -147,7 +165,7 @@ public class GameEngine {
             System.out.print("\n");
         }
     }
-
+    //Compute the number of turns needed
     public void run(){
         System.out.println("Initial map : \n");
         visualizeMap();
@@ -156,7 +174,7 @@ public class GameEngine {
             computeTurn();
         }
     }
-
+    //For each player determine the next action to compute
     public void computeTurn(){
         for(Adventurer adventurer : adventurers){
             switch (adventurer.retrieveAction()){
@@ -183,7 +201,7 @@ public class GameEngine {
 
         }
     }
-
+    //determine the axis to change depending of the adventurer's orientation and if possible move the adventurer to the cell he is facing
     public boolean moveAdventurer(Adventurer adventurer){
         int previousx = adventurer.getX();
         int previousy = adventurer.getY();
@@ -219,6 +237,8 @@ public class GameEngine {
         return (x>=0)&&(y>=0)&&(y<verticalLength)&&(x<horizontalLength)&&(!map[y][x].isOccupied())&&(!map[y][x].isMountainous());
     }
 
+
+    //Generate an output to a text file by scanning each cell looking for specific item
     public void generateOutput(){
         try {
             File fout = new File("out.txt");
