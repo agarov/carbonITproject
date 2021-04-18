@@ -18,10 +18,33 @@ public class GameEngine {
         this.nbrOfTurn=0;
     }
 
+    public Cell[][] getMap() {
+        return map;
+    }
+
+    public int getHorizontalLength() {
+        return horizontalLength;
+    }
+
+    public int getVerticalLength() {
+        return verticalLength;
+    }
+
+    public int getLongerNameLength() {
+        return longerNameLength;
+    }
+
+    public int getNbrOfTurn() {
+        return nbrOfTurn;
+    }
+
+    public ArrayList<Adventurer> getAdventurers() {
+        return adventurers;
+    }
+
     public LinkedList<String> extractData(String fileName){
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(fileName).getFile());
+            File file = new File(fileName);
             BufferedReader br = new BufferedReader(new FileReader(file));
             LinkedList<String> lines = new LinkedList<>();
             String line = br.readLine();
@@ -131,33 +154,7 @@ public class GameEngine {
                     System.out.println(adventurer.getName()+" turned to the right, facing now "+adventurer.getCurrentOrientation().toString());
                     break;
                 case "A":
-                    int previousx = adventurer.getX();
-                    int previousy = adventurer.getY();
-                    int newx = previousx;
-                    int newy = previousy;
-                    switch (adventurer.getCurrentOrientation()) {
-                        case E:
-                           newx++;
-                           break;
-                        case S:
-                            newy++;
-                            break;
-                        case O:
-                            newx--;
-                            break;
-                        case N:
-                            newy--;
-                            break;
-                    }
-                    if(attainableCase(newx,newy)){
-                        System.out.println(adventurer.getName()+" moved from "+previousx+";"+previousy+" to "+newx+";"+newy);
-                        map[previousy][previousx].detachAdventurer();
-                        map[newy][newx].attachAdventurer(adventurer);
-                        adventurer.setX(newx);
-                        adventurer.setY(newy);
-                        visualizeMap();
-                    }
-                    else{
+                    if(!moveAdventurer(adventurer)){
                         System.out.println("Unattainable case");
                     }
                     break;
@@ -166,6 +163,37 @@ public class GameEngine {
             }
 
         }
+    }
+
+    public boolean moveAdventurer(Adventurer adventurer){
+        int previousx = adventurer.getX();
+        int previousy = adventurer.getY();
+        int newx = previousx;
+        int newy = previousy;
+        switch (adventurer.getCurrentOrientation()) {
+            case E:
+                newx++;
+                break;
+            case S:
+                newy++;
+                break;
+            case O:
+                newx--;
+                break;
+            case N:
+                newy--;
+                break;
+        }
+        if(attainableCase(newx,newy)){
+            System.out.println(adventurer.getName()+" moved from "+previousx+";"+previousy+" to "+newx+";"+newy);
+            map[previousy][previousx].detachAdventurer();
+            map[newy][newx].attachAdventurer(adventurer);
+            adventurer.setX(newx);
+            adventurer.setY(newy);
+            visualizeMap();
+            return true;
+        }
+        else {return false;}
     }
 
     public boolean attainableCase(int x,int y){
