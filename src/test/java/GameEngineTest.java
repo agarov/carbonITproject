@@ -24,7 +24,7 @@ public class GameEngineTest {
         String[] separated = {"M","0","0"};
         createEmptyMap4x4();
         testEngine.createMountainFromStrings(separated);
-        assertEquals(true,testEngine.getMap()[0][0].isMountainous());
+        assertTrue(testEngine.getMap()[0][0].isMountainous());
 
     }
 
@@ -41,7 +41,7 @@ public class GameEngineTest {
         String[] separated = {"A","Lara","1","1","S","AADADAGGA"};
         createEmptyMap4x4();
         testEngine.createAdventurerFromStrings(separated);
-        assertEquals(true,testEngine.getMap()[1][1].isOccupied());
+        assertTrue(testEngine.getMap()[1][1].isOccupied());
         Adventurer adventurer = testEngine.getMap()[1][1].getAttachedAdventurer();
         assertEquals("Lara",adventurer.getName());
         assertEquals(1,adventurer.getX());
@@ -71,8 +71,8 @@ public class GameEngineTest {
         assertEquals(3,testEngine.getHorizontalLength());
         assertEquals(4,testEngine.getVerticalLength());
         Cell[][] map = testEngine.getMap();
-        assertEquals(true,map[0][1].isMountainous());
-        assertEquals(true,map[1][2].isMountainous());
+        assertTrue(map[0][1].isMountainous());
+        assertTrue(map[1][2].isMountainous());
         assertEquals(2,map[3][0].getNbrOfTreasures());
         assertEquals(3,map[3][1].getNbrOfTreasures());
         Adventurer adventurer = testEngine.getAdventurers().get(0);
@@ -90,14 +90,14 @@ public class GameEngineTest {
         createEmptyMap4x4();
         Adventurer adventurer = new Adventurer("Test",0,0, Adventurer.Orientation.S,"");
         testEngine.addAdventurer(adventurer);
-        assertEquals(true,testEngine.moveAdventurer(adventurer));
+        assertTrue(testEngine.moveAdventurer(adventurer));
 
         adventurer.turnLeft();
-        assertEquals(true,testEngine.moveAdventurer(adventurer));
+        assertTrue(testEngine.moveAdventurer(adventurer));
         adventurer.turnLeft();
-        assertEquals(true,testEngine.moveAdventurer(adventurer));
+        assertTrue(testEngine.moveAdventurer(adventurer));
         adventurer.turnLeft();
-        assertEquals(true,testEngine.moveAdventurer(adventurer));
+        assertTrue(testEngine.moveAdventurer(adventurer));
         assertEquals(0,adventurer.getX());
         assertEquals(0,adventurer.getY());
     }
@@ -106,13 +106,13 @@ public class GameEngineTest {
     void testOutOfMapMovement(){
         createEmptyMap4x4();
         Adventurer adventurer = new Adventurer("Test",0,0, Adventurer.Orientation.O,"");
-        assertEquals(false, testEngine.moveAdventurer(adventurer));
+        assertFalse( testEngine.moveAdventurer(adventurer));
         adventurer = new Adventurer("Test",3,0, Adventurer.Orientation.E,"");
-        assertEquals(false, testEngine.moveAdventurer(adventurer));
+        assertFalse( testEngine.moveAdventurer(adventurer));
         adventurer = new Adventurer("Test",0,0, Adventurer.Orientation.N,"");
-        assertEquals(false, testEngine.moveAdventurer(adventurer));
+        assertFalse( testEngine.moveAdventurer(adventurer));
         adventurer = new Adventurer("Test",3,3, Adventurer.Orientation.S,"");
-        assertEquals(false, testEngine.moveAdventurer(adventurer));
+        assertFalse( testEngine.moveAdventurer(adventurer));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class GameEngineTest {
         createEmptyMap4x4();
         Adventurer adventurer = new Adventurer("Test",0,0, Adventurer.Orientation.S,"");
         testEngine.getMap()[1][0].setMountainous(true);
-        assertEquals(false, testEngine.moveAdventurer(adventurer));
+        assertFalse(testEngine.moveAdventurer(adventurer));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class GameEngineTest {
         Adventurer adventurer1 = new Adventurer("Test",0,0, Adventurer.Orientation.S,"");
         Adventurer adventurer2 = new Adventurer("Test",0,1, Adventurer.Orientation.S,"");
         testEngine.getMap()[1][0].attachAdventurer(adventurer2);
-        assertEquals(false, testEngine.moveAdventurer(adventurer1));
+        assertFalse(testEngine.moveAdventurer(adventurer1));
     }
 
     @Test
@@ -151,6 +151,38 @@ public class GameEngineTest {
         assertEquals(2,adventurer4.getY());
     }
 
+    @Test
+    void testCompleteRunOfSubjectExample(){
+        LinkedList<String> exampleLines = new LinkedList<>();
+        exampleLines.add("   #test");
+        exampleLines.add("C - 3 - 4");
+        exampleLines.add(" M - 1 - 0");
+        exampleLines.add("M - 2 - 1");
+        exampleLines.add("#test");
+        exampleLines.add("T - 0 - 3 - 2");
+        exampleLines.add("T - 1 - 3 - 3");
+        exampleLines.add("A - Lara - 1 - 1 - S - AADADAGGA");
+        testEngine.parseData(exampleLines);
+        testEngine.run();
+        assertEquals(3,testEngine.getHorizontalLength());
+        assertEquals(4,testEngine.getVerticalLength());
+        Cell[][] map = testEngine.getMap();
+        assertTrue(map[0][1].isMountainous());
+        assertTrue(map[1][2].isMountainous());
+        assertEquals(0,map[3][0].getNbrOfTreasures());
+        assertEquals(2,map[3][1].getNbrOfTreasures());
+        Adventurer adventurer = testEngine.getAdventurers().get(0);
+        assertEquals(adventurer,testEngine.getMap()[3][0].getAttachedAdventurer());
+        assertEquals("Lara",adventurer.getName());
+        assertEquals(0,adventurer.getX());
+        assertEquals(3,adventurer.getY());
+        assertEquals(Adventurer.Orientation.S,adventurer.getCurrentOrientation());
+        assertEquals("",adventurer.getRemainingPath());
+        assertEquals(4,testEngine.getLongerNameLength());
+        assertEquals(9,testEngine.getNbrOfTurn());
+        assertEquals(3,adventurer.getLootedTreasures());
+
+    }
 
 
 
