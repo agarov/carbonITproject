@@ -62,9 +62,14 @@ public class Adventurer {
     }
 
     public String retrieveAction(){
-        String actionLetter = remainingPath.substring(0,1);
-        remainingPath = remainingPath.substring(1);
-        return actionLetter;
+        if(remainingPath.length()>0){
+            String actionLetter = remainingPath.substring(0,1);
+            remainingPath = remainingPath.substring(1);
+            return actionLetter;
+        }
+        else {
+            return "";
+        }
     }
 
     public int getLootedTreasures() {

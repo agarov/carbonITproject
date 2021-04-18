@@ -42,6 +42,7 @@ public class GameEngine {
         return adventurers;
     }
 
+
     public LinkedList<String> extractData(String fileName){
         try {
             File file = new File(fileName);
@@ -84,31 +85,15 @@ public class GameEngine {
             if (!startingLetter.equals("#")){
                 line = line.replaceAll("\\s+","");
                 separated = line.split("-");
-                int x;
-                int y;
                 switch (startingLetter){
                     case "M":
-                        x = Integer.parseInt(separated[1]);
-                        y = Integer.parseInt(separated[2]);
-                        map[y][x].setMountainous(true);
+                        createMountainFromStrings(separated);
                         break;
                     case "T":
-                        x = Integer.parseInt(separated[1]);
-                        y = Integer.parseInt(separated[2]);
-                        int nbrOfTreasures = Integer.parseInt(separated[3]);
-                        map[y][x].setNbrOfTreasures(nbrOfTreasures);
+                        createTreasuresFromStrings(separated);
                         break;
                     case "A":
-                        String adventurerName = separated[1];
-                        if(adventurerName.length()>longerNameLength){longerNameLength=adventurerName.length();}
-                        x = Integer.parseInt(separated[2]);
-                        y = Integer.parseInt(separated[3]);
-                        Adventurer.Orientation orientation = Adventurer.Orientation.valueOf(separated[4]);
-                        String path = separated[5];
-                        if(path.length()>nbrOfTurn){nbrOfTurn=path.length();}
-                        Adventurer adventurer = new Adventurer(adventurerName,x,y,orientation,path);
-                        this.adventurers.add(adventurer);
-                        map[y][x].attachAdventurer(adventurer);
+                        createAdventurerFromStrings(separated);
                         break;
                     default:
                         System.out.println("Unexpected value: " + startingLetter);
@@ -116,6 +101,36 @@ public class GameEngine {
                 }
             }
         }
+    }
+
+    public void createMountainFromStrings(String[] separated){
+        int x = Integer.parseInt(separated[1]);
+        int y = Integer.parseInt(separated[2]);
+        map[y][x].setMountainous(true);
+    }
+
+    public void createTreasuresFromStrings(String[] separated){
+        int x = Integer.parseInt(separated[1]);
+        int y = Integer.parseInt(separated[2]);
+        int nbrOfTreasures = Integer.parseInt(separated[3]);
+        map[y][x].setNbrOfTreasures(nbrOfTreasures);
+    }
+
+    public void createAdventurerFromStrings(String[] separated){
+        String adventurerName = separated[1];
+        if(adventurerName.length()>longerNameLength){longerNameLength=adventurerName.length();}
+        int x = Integer.parseInt(separated[2]);
+        int y = Integer.parseInt(separated[3]);
+        Adventurer.Orientation orientation = Adventurer.Orientation.valueOf(separated[4]);
+        String path = separated[5];
+        if(path.length()>nbrOfTurn){nbrOfTurn=path.length();}
+        Adventurer adventurer = new Adventurer(adventurerName,x,y,orientation,path);
+        addAdventurer(adventurer);
+        map[y][x].attachAdventurer(adventurer);
+    }
+
+    public void addAdventurer(Adventurer adventurer){
+        adventurers.add(adventurer);
     }
 
     public void populateMap(){
@@ -158,8 +173,12 @@ public class GameEngine {
                         System.out.println("Unattainable case");
                     }
                     break;
+                case "":
+                    System.out.println("Player already finished all of its actions");
+                    break;
                 default:
                     System.out.println("Unexpected action character");
+                    break;
             }
 
         }
